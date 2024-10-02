@@ -1,6 +1,4 @@
-from django.db import models
-
-# Create your models here.
+# tweets/models.py
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -11,3 +9,4 @@ class Tweet(models.Model):
 
     def __str__(self):
         return self.content
+

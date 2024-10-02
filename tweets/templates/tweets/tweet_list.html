@@ -1,5 +1,24 @@
-<h1>Timeline</h1>
-{% for tweet in tweets %}
-    <p><strong>{{ tweet.user.username }}</strong>: {{ tweet.content }}</p>
-{% endfor %}
-<a href="{% url 'create_tweet' %}">Novo Tweet</a>
+{% extends 'tweets/base.html' %}
+
+{% block content %}
+    <div class="tweet-form">
+        <h2>Criar Tweet</h2>
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" rows="4" placeholder="O que está acontecendo?" required></textarea>
+            <br>
+            <button type="submit">Tweetar</button>
+        </form>
+    </div>
+
+    <h2>Feed de Tweets</h2>
+    {% for tweet in tweets %}
+        <div class="tweet">
+            <p>{{ tweet.content }}</p>
+            <small>{{ tweet.created_at }}</small>
+        </div>
+    {% empty %}
+        <p>Nenhum tweet encontrado.</p>
+    {% endfor %}
+{% endblock %}
+
