@@ -1,0 +1,6 @@
+<h1>Novo Tweet</h1>
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="content" rows="4" cols="50"></textarea><br>
+    <button type="submit">Tweetar</button>
+</form>
