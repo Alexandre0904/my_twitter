@@ -1,0 +1,29 @@
+name: Deploy to PythonAnywhere
+
+on:
+  push:
+    branches:
+      - master  # Ou 'main', dependendo da sua branch principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Reload PythonAnywhere web app
+        uses: jensvog/pythonanywhere-webapp-reload-action@v1
+        with:
+          username: ${{ secrets.PYTHONANYWHERE_USERNAME }}
+          api-token: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
+          domain-name: alexandre0904.pythonanywhere.com
+
+
