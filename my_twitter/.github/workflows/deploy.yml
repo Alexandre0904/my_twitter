@@ -1,51 +1,29 @@
-name: Test and Deploy to PythonAnywhere
+name: Deploy to PythonAnywhere
 
 on:
   push:
     branches:
-      - main  # Rodar o fluxo na branch 'main'
+      - main  # Ou 'main', dependendo da sua branch principal test
 
 jobs:
-  test-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: [3.8, 3.9]  # Testar com as versões 3.8 e 3.9 do Python
-
     steps:
-      # Etapa 1: Checkout do código
       - name: Checkout the code
         uses: actions/checkout@v3
 
-      # Etapa 2: Configurar Python
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      # Etapa 3: Instalar Poetry e dependências
-      - name: Install poetry and dependencies
+      - name: Install dependencies
         run: |
-          python -m ensurepip
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade poetry
-          poetry install
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
 
-      # Etapa 4: Rodar os testes do Django
-      - name: Run Django tests
-        run: |
-          poetry run python manage.py test
-
-      # Etapa 5: Executar o deploy no PythonAnywhere se os testes passarem
-      - name: Deploy to PythonAnywhere
-        if: success()  # Só faz o deploy se os testes passarem
+      - name: Reload PythonAnywhere web app
         uses: jensvog/pythonanywhere-webapp-reload-action@v1
         with:
           username: ${{ secrets.PYTHONANYWHERE_USERNAME }}
           api-token: ${{ secrets.PYTHONANYWHERE_API_TOKEN }}
           domain-name: alexandre0904.pythonanywhere.com
-
 
 
